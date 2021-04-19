@@ -1,4 +1,4 @@
-
+from array import *
 class Automata:
     states = []
     symbols = []
@@ -72,8 +72,9 @@ def validateString(string):
     #print(var2)
     #print(nextState)
     count = 0
+    transitionMatrix = []
     if Automata.initialState == "q0":
-        print("Los strings son iguales")
+        #print("Los strings son iguales")
         for i in Automata.transitionTable:
             var1, var2 = Automata.transitionTable[count].split("=>")
             #var1 = "".join(var1)
@@ -82,15 +83,53 @@ def validateString(string):
             #print("Var1: " + str(var1))
             state, symbol = var1.split(",")
             #print(count)
-            count+=1
             print("State: "+ str(state)+ " Symbol: "+ str(symbol) + " Regresa:" + str(nextState))
-            if len(nextState) > 1:
-                #print("El estado sig es valido")
-                if state == "q3":
-                    print("El estado es q1")
-            
+            transitionMatrix += [[state, symbol, nextState]]
+            count+=1
+        print(transitionMatrix)
+        #temp = transitionMatrix[0][2]
+        checkTransition(string, transitionMatrix, Automata.initialState)
     else:
         print("Error: Automata initial state is not q0")
+
+
+def checkTransition(string, matrix, estado):
+    #print("Letra: " + str(leter))
+    m = matrix
+    #print("Matriz: " + str(matrix[0]))
+    print("Estado a validar: "+ str(estado))
+    print("String a validar: " + str(string))
+    c = 0
+    
+    
+    for i in matrix:
+        temp = matrix[c]
+        st = temp[0]
+        sym = temp[1]
+        res = temp[2]
+        c+=1
+        #print("State: "+ str(st) + " Symbol: " + str(sym)+ " Regresa: " + str(res))
+        if estado == st and sym == "lambda":
+            estado = res
+            print("Estado a regresar: " + str(estado))
+            checkTransition(string[0], m, estado)
+        if len(estado)>1:
+            p = 0
+            for k in estado:
+                #print(estado[p])
+                if estado[p] == st and sym == string[0]:
+                    e = res
+                    #print("Estado en p: "+ str(estado[p]))
+                    #estado[p] == res
+                    print("Estado a regresar cuando son mas 2 estados: " + str(e))
+                    checkTransition('b', m, e[0])
+                #print("P: " + str(p))
+                p+=1
+        if estado == st and sym == string[0]:
+            estado = res
+            print("Estado a regresar" + str(estado))
+            checkTransition('b', m, estado[0])
+
 
 if __name__ == "__main__":
     #print("Se corrio el main")
@@ -100,7 +139,7 @@ if __name__ == "__main__":
     #print(Automata.symbols)
     #print(Automata.initialState)
     #print(Automata.finalState)
-    #print(Automata.transitionTable)
+    print(Automata.transitionTable)
 
     #string = input("Input a string separated by commas: ")
     validateString('b,b,a')
