@@ -99,36 +99,45 @@ def checkTransition(string, matrix, estado):
     #print("Matriz: " + str(matrix[0]))
     print("Estado a validar: "+ str(estado))
     print("String a validar: " + str(string))
+    #print("Letra a analizar: " + str(letra))
     c = 0
+    letra = ""
     
     
-    for i in matrix:
-        temp = matrix[c]
-        st = temp[0]
-        sym = temp[1]
-        res = temp[2]
-        c+=1
-        #print("State: "+ str(st) + " Symbol: " + str(sym)+ " Regresa: " + str(res))
-        if estado == st and sym == "lambda":
-            estado = res
-            print("Estado a regresar: " + str(estado))
-            checkTransition(string[0], m, estado)
-        if len(estado)>1:
-            p = 0
-            for k in estado:
-                #print(estado[p])
-                if estado[p] == st and sym == string[0]:
-                    e = res
-                    #print("Estado en p: "+ str(estado[p]))
-                    #estado[p] == res
-                    print("Estado a regresar cuando son mas 2 estados: " + str(e))
-                    checkTransition('b', m, e[0])
-                #print("P: " + str(p))
-                p+=1
-        if estado == st and sym == string[0]:
-            estado = res
-            print("Estado a regresar" + str(estado))
-            checkTransition('b', m, estado[0])
+    if string:
+        letra = string[0]
+        print("Letra:" + str(letra))
+        for i in matrix:
+            temp = matrix[c]
+            st = temp[0]
+            sym = temp[1]
+            res = temp[2]
+            c+=1
+            #print("State: "+ str(st) + " Symbol: " + str(sym)+ " Regresa: " + str(res))
+            if estado == st and sym == "lambda":
+                estado = res
+                print("Estado a regresar: " + str(estado))
+                checkTransition(string, m, estado)
+            if len(estado)>1:
+                p = 0
+                for k in estado:
+                    #print(p)
+                    if estado[p] == st and sym == letra:
+                        e = res
+                        print("Estados: "+ str(estado))
+                        print("Estado en p: "+ str(estado[p]))
+                        #estado[p] == res
+                        print("Estado a regresar cuando son mas 2 estados: " + str(e))
+                        #estado.pop(p)
+                        string.pop(0)
+                        checkTransition(string, m, e)
+                    p+=1
+            elif estado == st and sym == letra:
+                estado = res
+                print("Estado a regresar" + str(estado))
+                string.pop(0)
+                checkTransition(string, m, estado[0])
+            
 
 
 if __name__ == "__main__":
