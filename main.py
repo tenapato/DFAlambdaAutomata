@@ -88,12 +88,13 @@ def validateString(string):
             count+=1
         print(transitionMatrix)
         #temp = transitionMatrix[0][2]
-        checkTransition(string, transitionMatrix, Automata.initialState)
+        
+        checkTransition(string, transitionMatrix, Automata.initialState, True)
     else:
         print("Error: Automata initial state is not q0")
 
 
-def checkTransition(string, matrix, estado):
+def checkTransition(string, matrix, estado, puede):
     #print("Letra: " + str(leter))
     m = matrix
     #print("Matriz: " + str(matrix[0]))
@@ -102,41 +103,77 @@ def checkTransition(string, matrix, estado):
     #print("Letra a analizar: " + str(letra))
     c = 0
     letra = ""
-    
-    
+    #print("Matriz: " + str(matrix))
+    Puede = puede
     if string:
         letra = string[0]
         print("Letra:" + str(letra))
-        for i in matrix:
-            temp = matrix[c]
-            st = temp[0]
-            sym = temp[1]
-            res = temp[2]
-            c+=1
-            #print("State: "+ str(st) + " Symbol: " + str(sym)+ " Regresa: " + str(res))
-            if estado == st and sym == "lambda":
-                estado = res
-                print("Estado a regresar: " + str(estado))
-                checkTransition(string, m, estado)
-            if len(estado)>1:
-                p = 0
-                for k in estado:
-                    #print(p)
-                    if estado[p] == st and sym == letra:
-                        e = res
-                        print("Estados: "+ str(estado))
-                        print("Estado en p: "+ str(estado[p]))
-                        #estado[p] == res
-                        print("Estado a regresar cuando son mas 2 estados: " + str(e))
-                        #estado.pop(p)
-                        string.pop(0)
-                        checkTransition(string, m, e)
-                    p+=1
-            elif estado == st and sym == letra:
-                estado = res
-                print("Estado a regresar" + str(estado))
-                string.pop(0)
-                checkTransition(string, m, estado[0])
+        
+        if Puede:
+            for i in matrix:
+                temp = matrix[c]
+                st = temp[0]
+                sym = temp[1]
+                res = temp[2]
+                c+=1
+                Puede = False
+                #print("State: "+ str(st) + " Symbol: " + str(sym)+ " Regresa: " + str(res))
+                if estado == st and sym == "lambda":
+                    print("El estado " + str(estado) + " en Lambda regresa " + str(res) )
+                    estado = res
+                    #print("Estado a regresar: " + str(estado))
+                    checkTransition(string, m, estado, False)
+        
+        if len(estado)>1:
+            c= 0
+            #print("Estados: " + str(estado))
+            print("Tiene 2 estados que validar")
+            print("Estado en 0: " + str(estado[0]))
+            print("Estado en 1: " + str(estado[1]))
+            #print("Estado > 1: " +  str(estado))
+            for j in matrix:
+                temp = matrix[c]
+                st = temp[0]
+                sym = temp[1]
+                res = temp[2]
+                print("State: "+ str(st) + " Symbol: " + str(sym)+ " Regresa: " + str(res))
+                c+=1 
+                if estado[0] == st and sym == letra:
+                    print("Entramos al if de estado[0]")
+                    estadoTemp = res
+                    print("Estado a regresar cuando > 1: " + str(estadoTemp))
+                    string.pop(0)
+                    estado.pop(0)
+                    estado += estadoTemp
+                    print("Estado despues del pop" + str(estado))
+                    checkTransition(string, m, estado, False)
+                    if not (estado[0] == st and sym == letra):
+                        print("No se encontro algo que regresar, se saco " + str(estado[0]))
+                        estado.pop(0)
+                        checkTransition(string, m, estado, False)
+                    break
+        if (len(estado) == 1):
+            print("Tiene solo 1 estado")
+            print("Estado cuando solo es 1: " + str(estado))
+            print("Letra cuando solo es 1 estado: "+ str(letra))
+            c = 0
+            
+            for k in matrix:
+                #print("K: " + str(k))
+                temp = matrix[c]
+                st = temp[0]
+                sym = temp[1]
+                res = temp[2]
+                #print("State: "+ str(st) + " Symbol: " + str(sym)+ " Regresa: " + str(res))
+                c+=1
+                if estado == st and sym == letra:
+                    print("Entro al if")
+                    estado = res
+                    print("Estado a regresar" + str(estado))
+                    string.pop(0)
+                    checkTransition(string, m, estado, False)
+                
+            
             
 
 
